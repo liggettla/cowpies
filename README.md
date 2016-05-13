@@ -1,2 +1,2 @@
-# skidmarks
+# cowpies
 Stock Portfolio Manager
