@@ -1,0 +1,2 @@
+# skidmarks
+Stock Portfolio Manager
