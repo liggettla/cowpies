@@ -28,7 +28,9 @@ quotes = getQuotes(securList)
 #aapl = 96.25 02/22/16 290
 #xlv = 71.41 04/27/16 1400
 from time import sleep
+from os import system
 while True:
+    system('clear')
     for i in quotes:
         index = i['Index']
         symbol = i['StockSymbol']
@@ -52,6 +54,6 @@ while True:
         '\n' + symbol + '\t' + time + '\t' + str(price) + '\t' + str(prevClose) + \
         '\t' + str(dayChange) + '\t' + str(gain) + '\n'
 
-    sleep(10)
+    sleep(1)
 
 
