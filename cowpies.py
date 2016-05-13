@@ -19,30 +19,39 @@ else:
 
 
 #Info
-securList =  ['AAPL', 'XLV']
-quotes = getQuotes(securList)
-for i in quotes:
-    index = i['Index']
-    symbol = i['StockSymbol']
-    price = float(i['LastTradePrice'])
-    time = i['LastTradeTime']
-    timeLong = i['LastTradeDateTimeLong']
-    dateTime = i['LastTradeDateTime']
-    lastCurrency = i['LastTradeWithCurrency']
-    ident = i['ID']
-
-
 from yahoo_finance import Share
-aapl = Share('AAPL')
-xlv = Share('XLV')
+
+securList =  ['AAPL', 'XLV']
+sharesList = {'AAPL':290, 'XLV':1400}
+quotes = getQuotes(securList)
 
 #aapl = 96.25 02/22/16 290
 #xlv = 71.41 04/27/16 1400
+from time import sleep
+while True:
+    for i in quotes:
+        index = i['Index']
+        symbol = i['StockSymbol']
+        shares = sharesList[symbol]
+        price = float(i['LastTradePrice'])
+        time = i['LastTradeTime']
+        timeLong = i['LastTradeDateTimeLong']
+        dateTime = i['LastTradeDateTime']
+        lastCurrency = i['LastTradeWithCurrency']
+        ident = i['ID']
 
-prevClose = float(xlv.get_prev_close())
+        stock = Share(str(symbol))
+        prevClose = float(stock.get_prev_close())
+        dayChange = price - prevClose
+        gain = dayChange * shares
+        change = (price - prevClose) / prevClose * 100
 
-change = (price - prevClose) / prevClose * 100
-dayGain = change/100 * (1400 * prevClose)
+#Display
+
+        print 'Symbol\tTime\t\tPrice\tClose\t%Change\tTotGain' + \
+        '\n' + symbol + '\t' + time + '\t' + str(price) + '\t' + str(prevClose) + \
+        '\t' + str(dayChange) + '\t' + str(gain) + '\n'
+
+    sleep(10)
 
 
-print symbol + '\t' + time + '\t' + str(price) + '\t' + str(change) + '\t$' + str(dayGain)
