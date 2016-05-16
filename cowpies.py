@@ -31,6 +31,7 @@ from time import sleep
 from os import system
 while True:
     system('clear')
+    totGain = 0.0
     for i in quotes:
         index = i['Index']
         symbol = i['StockSymbol']
@@ -44,16 +45,19 @@ while True:
 
         stock = Share(str(symbol))
         prevClose = float(stock.get_prev_close())
+        #print prevClose
         dayChange = price - prevClose
         gain = dayChange * shares
         change = (price - prevClose) / prevClose * 100
+        totGain += gain
 
 #Display
 
         print 'Symbol\tTime\t\tPrice\tClose\t%Change\tTotGain' + \
         '\n' + symbol + '\t' + time + '\t' + str(price) + '\t' + str(prevClose) + \
         '\t' + str(dayChange) + '\t' + str(gain) + '\n'
+    print 'Total Gain\n%f' % (totGain)
 
-    sleep(1)
+    sleep(10)
 
 
