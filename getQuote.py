@@ -7,18 +7,18 @@ class getQuote(object):
         from yahoo_finance import Share
 
         self.stock = stock[0]
-        self.index = self.stock['Index']
-        self.symbol = self.stock['StockSymbol']
-        self.shares = sharesList[self.symbol]
+        self.index = str(self.stock['Index'])
+        self.symbol = str(self.stock['StockSymbol'])
+        self.shares = int(sharesList[self.symbol])
         self.price = float(self.stock['LastTradePrice'])
-        self.time = self.stock['LastTradeTime']
-        self.timeLong = self.stock['LastTradeDateTimeLong']
-        self.dateTime = self.stock['LastTradeDateTime']
+        self.time = str(self.stock['LastTradeTime'])
+        self.timeLong = str(self.stock['LastTradeDateTimeLong'])
+        self.dateTime = str(self.stock['LastTradeDateTime'])
         self.lastCurrency = self.stock['LastTradeWithCurrency']
-        self.ident = self.stock['ID']
+        self.ident = str(self.stock['ID'])
 
         # get previous close
-        x = Share(str(self.symbol))
+        x = Share(self.symbol)
         self.prevClose = float(x.get_prev_close())
 
         # get changes in stock prices

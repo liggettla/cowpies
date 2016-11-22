@@ -38,7 +38,7 @@ while True:
         stock = getQuote(getQuotes(i), sharesList)
         totalGain += stock.gain
 
-        output = '%s\t%s\t%s\t%s\t%s\t%s' % (str(stock.symbol), str(stock.time), str(stock.price), str(stock.prevClose), str(stock.dayChange), str(stock.gain))
+        output = '%s\t%s\t%s\t%s\t%s\t%s' % (stock.symbol, stock.time, stock.price, stock.prevClose, stock.dayChange, stock.gain)
         allOutput.append(output)
 
     sleep(1)
