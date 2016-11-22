@@ -30,7 +30,7 @@ from getQuote import getQuote
 
 while True:
     allOutput = []
-    header = 'Symbol\tTime\t\tPrice\tClose\t%Change\tTotGain'
+    header = 'Symbol\tTime\t\tPrice\tClose\t%Change\tDayGain'
     allOutput.append(header)
     totalGain = 0.0
 
