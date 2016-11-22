@@ -17,47 +17,32 @@ if isdir('./userData'):
 else:
     makedirs('./userData')
 
-
-#Info
-from yahoo_finance import Share
-
-securList =  ['AAPL', 'XLV']
-sharesList = {'AAPL':290, 'XLV':1400}
+securList =  ['AAPL', 'XLV', 'QQQ']
+sharesList = {'AAPL':290, 'XLV':1400, 'QQQ':232}
 quotes = getQuotes(securList)
 
 #aapl = 96.25 02/22/16 290
 #xlv = 71.41 04/27/16 1400
+#qqq = 116.38 08/31/2016 232
 from time import sleep
 from os import system
+from getQuote import getQuote
+
 while True:
+    allOutput = []
+    header = 'Symbol\tTime\t\tPrice\tClose\t%Change\tTotGain'
+    allOutput.append(header)
+    totalGain = 0.0
+
+    for i in securList:
+        stock = getQuote(getQuotes(i), sharesList)
+        totalGain += stock.gain
+
+        output = '%s\t%s\t%s\t%s\t%s\t%s' % (str(stock.symbol), str(stock.time), str(stock.price), str(stock.prevClose), str(stock.dayChange), str(stock.gain))
+        allOutput.append(output)
+
+    sleep(1)
     system('clear')
-    totGain = 0.0
-    for i in quotes:
-        index = i['Index']
-        symbol = i['StockSymbol']
-        shares = sharesList[symbol]
-        price = float(i['LastTradePrice'])
-        time = i['LastTradeTime']
-        timeLong = i['LastTradeDateTimeLong']
-        dateTime = i['LastTradeDateTime']
-        lastCurrency = i['LastTradeWithCurrency']
-        ident = i['ID']
-
-        stock = Share(str(symbol))
-        prevClose = float(stock.get_prev_close())
-        #print prevClose
-        dayChange = price - prevClose
-        gain = dayChange * shares
-        change = (price - prevClose) / prevClose * 100
-        totGain += gain
-
-#Display
-
-        print 'Symbol\tTime\t\tPrice\tClose\t%Change\tTotGain' + \
-        '\n' + symbol + '\t' + time + '\t' + str(price) + '\t' + str(prevClose) + \
-        '\t' + str(dayChange) + '\t' + str(gain) + '\n'
-    print 'Total Gain\n%f' % (totGain)
-
-    sleep(10)
-
-
+    for i in allOutput:
+        print i
+    print 'Total Daily Gain: %f' % (totalGain)
