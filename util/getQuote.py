@@ -28,16 +28,19 @@ print(len(nyse))
 def getPrice():
     import pandas
     #import pandas.io.data as web
-    from datetime import datetime
+    #from datetime import datetime
+    import datetime
 
     tickers = ['ORCL', 'TSLA', 'IBM', 'MSFT']
-    start = datetime(2014,1,1)
+    start = datetime.datetime(2014,1,1)
+    #end = datetime.datetime(2014,1,3)
+    start = datetime.date.today() - datetime.timedelta (4)
     end = datetime.date.today()
-    end = datetime(2014,12,31)
     stockRawData = web.DataReader(tickers, 'yahoo', start, end)
     print(stockRawData.to_frame())
 
     sliceKey = 'Adj Close'
+    sliceKey = 'Low'
     adjCloseData = stockRawData.ix[sliceKey]
     print(adjCloseData)
 
