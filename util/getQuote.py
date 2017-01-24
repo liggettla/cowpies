@@ -5,47 +5,73 @@
 # Company info can be downloaded here: http://www.nasdaq.com/screening/companies-by-industry.aspx?exchange=NASDAQ&render=download
 # and here: http://www.nasdaq.com/screening/companies-by-industry.aspx?exchange=NYSE&render=download
 
+# Find materials here: http://lectures.quantecon.org/py/index.html
+
 import pandas_datareader.data as web
-qqq = web.get_quote_yahoo('QQQ')
-print(qqq)
-print(type(qqq))
+import pandas as pd
+import matplotlib.pyplot as plt
+from datetime import datetime as dt
+from datetime import timedelta
+from datetime import date
 
-def getQuote(symbolList):
-    quoteList = []
-    for stock in symbolList:
-        x = web.get_quote_yahoo(stock)
-        quoteList.append(x)
+# Get lists of all nyse/nasday tickers over mrkt cap of 1bln
+def importSymbols():
+    from symbols import getSymbolLists
+    nasdaq = getSymbolLists('NASDAQ')
+    nyse = getSymbolLists('NYSE')
+    return nasdaq, nyse
 
-    return quoteList
+def getQuote(symbol):
+    quote = web.get_quote_yahoo(symbol)
+    return quote
 
-# import symbol lists
-from symbols import getSymbolLists
-nasdaq = getSymbolLists('NASDAQ')
-print(len(nasdaq))
+# Give specified start and end dates
+def startEndDates():
+    start = dt(2014,1,1)
+    end = dt(2014,1,20)
+    return start, end
 
-nyse = getSymbolLists('NYSE')
-print(len(nyse))
+# Give start and end dates by number of days before today
+def startEndDatesToday(numDays):
+    start = date.today() - timedelta(numDays)
+    end = date.today()
+    return start, end
 
-def getPrice():
-    import pandas
-    #import pandas.io.data as web
-    #from datetime import datetime
-    import datetime
-
-    tickers = ['QQQ']
-    start = datetime.datetime(2014,1,1)
-    #end = datetime.datetime(2014,1,3)
-    start = datetime.date.today() - datetime.timedelta (4)
-    end = datetime.date.today()
+def createDF(tickers, start, end):
     stockRawData = web.DataReader(tickers, 'yahoo', start, end)
-    print(stockRawData.to_frame())
+    return stockRawData
 
-    sliceKey = 'Adj Close'
-    sliceKey = 'Low'
+def testing(stockRawData):
+    closing_prices = stockRawData.ix['Close']
+    oneStock = closing_prices['QQQ']
+    change = 100 * (oneStock[-1] - oneStock[0]) / oneStock[0]
+
+    price_change = {}
+    price_change['QQQ'] = change
+    print(price_change)
+
+
+    pc = pd.Series(price_change)
+    pc.sort_values(inplace=True)
+    #fig, ax = plt.subplots(figsize=(10,8))
+    #pc.plot(kind='bar', ax=ax)
+
+    #print(stockRawData.to_frame())
+
+    sliceKey = 'Close'
     adjCloseData = stockRawData.ix[sliceKey]
-    print(adjCloseData)
+    #print(adjCloseData)
 
     ibmAdjCloseData = adjCloseData['QQQ']
-    print(ibmAdjCloseData)
+    #print(type(ibmAdjCloseData))
+    #print(adjCloseData[2:5])
+    #print(adjCloseData.pop('QQQ'))
 
-getPrice()
+if __name__ == "__main__":
+    #nasdaq, nyse = importSymbols()
+    tickers = ['QQQ','AAPL']
+    numDays = 20
+
+    start, end = startEndDatesToday(numDays)
+    df1 = createDF(tickers, start, end)
+    testing(df1)
