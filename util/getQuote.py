@@ -41,37 +41,69 @@ def createDF(tickers, start, end):
     stockRawData = web.DataReader(tickers, 'yahoo', start, end)
     return stockRawData
 
-def testing(stockRawData):
-    closing_prices = stockRawData.ix['Close']
-    oneStock = closing_prices['QQQ']
+# Give total change in stock price of period of time
+def getTotalReturn(symbol, df):
+    closing_prices = df.ix['Close']
+    oneStock = closing_prices[symbol]
     change = 100 * (oneStock[-1] - oneStock[0]) / oneStock[0]
-
     price_change = {}
-    price_change['QQQ'] = change
-    print(price_change)
+    price_change[symbol] = change
+    return change
 
+def plotClose(df):
+    ax = df['Close'].plot(title='Closing Prices', fontsize=12)
+    ax.set_xlabel('Time')
+    ax.set_ylabel('Close')
+    plt.show()
 
-    pc = pd.Series(price_change)
-    pc.sort_values(inplace=True)
-    #fig, ax = plt.subplots(figsize=(10,8))
-    #pc.plot(kind='bar', ax=ax)
+    ax = df['Adj Close'].plot(title='Adjusted Closing Prices', fontsize=12)
+    ax.set_xlabel('Time')
+    ax.set_ylabel('Adj Close')
+    plt.show()
 
-    #print(stockRawData.to_frame())
+def plotVolume(df):
+    ax = df['Volume'].plot(title='Volume', fontsize=12, kind='bar')
+    ax.set_xlabel('Time')
+    ax.set_ylabel('Volume')
+    plt.show()
 
-    sliceKey = 'Close'
-    adjCloseData = stockRawData.ix[sliceKey]
-    #print(adjCloseData)
+# This is not yet functional, refer to 6_histograms for help
+def compute_daily_returns(df):
+    daily_returns = df.copy() # copy the dataFrame so that values can be altered
+    daily_returns[1:] = (df[1:] / df[:-1].values) - 1 # compute for row 1 onwards
+    daily_returns.ix[0, :] = 0 # set daily returns for row 0 to 0
+    #daily_returns = (df /df.shift(1)) - 1
+    #daily_returns.ix[0, :] = 0
+    return daily_returns
 
-    ibmAdjCloseData = adjCloseData['QQQ']
-    #print(type(ibmAdjCloseData))
-    #print(adjCloseData[2:5])
-    #print(adjCloseData.pop('QQQ'))
+# Computes global stats on all data in range
+def globalStats(df):
+    print('Mean: ')
+    print(df.mean())
+    print('\nMedian: ')
+    print(df.median())
+    print('\nStdDev: ')
+    print(df.std())
+
+# Plot stock prices
+def plotData(df, slicekey, title='Stock Prices', xlabel='Date', ylabel='Price'):
+    # ax here is a plot object
+    # slice key is Close, Adj Close, Volume etc
+    ax = df[slicekey].plot(title=title, fontsize=12)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    plt.show()
+
+def testing(stockRawData):
+    pass
 
 if __name__ == "__main__":
-    #nasdaq, nyse = importSymbols()
+    nasdaq, nyse = importSymbols()
     tickers = ['QQQ','AAPL']
-    numDays = 20
+    numDays = 180
 
     start, end = startEndDatesToday(numDays)
     df1 = createDF(tickers, start, end)
+
+
     testing(df1)
