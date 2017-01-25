@@ -105,5 +105,6 @@ if __name__ == "__main__":
     start, end = startEndDatesToday(numDays)
     df1 = createDF(tickers, start, end)
 
+    plotData(df1, 'Adj Close', title='Shit')
 
     testing(df1)
